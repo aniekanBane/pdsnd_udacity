@@ -1,1 +1,9 @@
-.github/**
+#environment
+.venv
+
+#cache
+__pycache__
+
+#files
+bike_share/
+*.csv

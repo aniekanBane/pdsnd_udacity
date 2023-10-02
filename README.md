@@ -28,7 +28,7 @@ bike_share
 Install the required packages
 
 ```python
-pip install -r requiremnts.txt
+pip install -r requirements.txt
 ```
 
 Start the program

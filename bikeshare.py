@@ -1,5 +1,9 @@
+import logging
 import pandas as pd
 from pick import pick
+
+logging.basicConfig(format='\n%(levelname)s: %(message)s\n', level=logging.INFO)
+LOGGER = logging.getLogger()
 
 CITY_DATA = {
     'Chicago': 'chicago.csv',
@@ -102,8 +106,8 @@ def calculate_time(func):
         func(*args, **kwargs)
 
         end = time()
-
-        print(f'\nTime taken to {func.__doc__} -- {round(end - begin, 2)}s\n')
+        
+        LOGGER.info('Time Taken to %s -- %.2fs', func.__doc__, end - begin)
 
     return inner1
 

@@ -200,7 +200,9 @@ if __name__ == '__main__':
         trip_duration_stats(df)
         user_stats(df)
 
-        if input('restart program [y/n]? ') != 'y':
+        restart = input('restart program [y/n]? ').strip().lower()
+
+        if restart != 'y':
             break
 
     print('Program End')

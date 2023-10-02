@@ -4,6 +4,9 @@
 #cache
 __pycache__
 
+# unwanted
+.DS_Store
+
 #files
 bike_share/
 *.csv

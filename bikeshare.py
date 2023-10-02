@@ -14,6 +14,8 @@ CITY_DATA = {
 INDICATOR = '\u20d7'
 
 def get_months():
+    """Select month(s) to filter by"""
+
     selection = pick(
         ['January', 'February', 'March', 'April', 'May', 'June'],
         'Filter by month(s):',
@@ -25,6 +27,8 @@ def get_months():
     return [m for m, _ in selection]
 
 def get_days():
+    """Select day(s) to filter by"""
+    
     selection = pick(
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         'Filter by day(s):',
@@ -94,6 +98,7 @@ def load_data(city: str, months: list | None, days: list | None):
     return df
 
 def calculate_time(func):
+    """Time calculation decorator"""
 
     def inner1(*args, **kwargs):
 

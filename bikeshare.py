@@ -40,6 +40,15 @@ def get_days():
     return [d for d, _ in selection]
 
 def get_filters():
+    """
+    Ask user to specify city, month(s) and day(s) to analyze
+
+    Return
+    ------
+        - `str` - `city`: choosen city
+        - `list[str] | None` - `months`: month(s) to filter by
+        - `list[str] | None` - `days`: day(s) to filter by
+    """
 
     city, _ = pick(
         ['Chicago', 'Washington', 'New York City'],

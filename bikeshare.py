@@ -11,7 +11,7 @@ CITY_DATA = {
     'New York City': 'new_york_city.csv'
 }
 
-INDICATOR = '\u20d7'
+INDICATOR = '-> '
 
 def get_months():
     selection = pick(

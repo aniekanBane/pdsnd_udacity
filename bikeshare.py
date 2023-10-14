@@ -204,6 +204,18 @@ if __name__ == '__main__':
         trip_duration_stats(df)
         user_stats(df)
 
+        raw_data = input('Would you like to view raw data [y/n]? ').strip().lower()
+        if raw_data == 'y':
+            rows_per_page = 5
+            pd.set_option('display.max_columns', None)
+            for i in range(0, len(df), rows_per_page):
+                chunk = df.iloc[i:i + rows_per_page, 0:-3]
+                print('\n',chunk)
+
+                user_input = input("\nWould you like to view the next 5 rows [y/n]? ").strip().lower()
+                if user_input != 'y':
+                    break
+
         restart = input('restart program [y/n]? ').strip().lower()
 
         if restart != 'y':

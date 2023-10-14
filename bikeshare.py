@@ -99,19 +99,22 @@ def calculate_time(func):
 
         from time import time
 
+        print('-'*45)
+
         begin = time()
+
         func(*args, **kwargs)
+
         end = time()
         
-        # print('-'*45)
-        # LOGGER.info('Time Taken to %s -- %.2fs', func.__doc__, end - begin)
+        LOGGER.info('Time Taken to %s -- %.2fs', func.__doc__, end - begin)
 
     return inner1
 
 FORMAT_TIME = lambda x: f'{x} PM' if x > 11 else f'{x} AM'
 
 @calculate_time
-def time_stats(df: pd.DataFrame, buffer: list):
+def time_stats(df: pd.DataFrame):
     """Display statistics on the most frequent times of travel."""
 
     # most popular month
@@ -123,15 +126,13 @@ def time_stats(df: pd.DataFrame, buffer: list):
     # most popular hour
     hour = df.Hour.mode()[0]
 
-    buffer.append('Time Statistics')
-    buffer.append('---------------')
-    buffer.append(f'Busiest Month: {month}')
-    buffer.append(f'Busiet Day: {day}')
-    buffer.append(f'Rush Hour: {FORMAT_TIME(hour)}')
+    print('Busiest Month: ', month)
+    print('Busiest Day: ', day)
+    print('Rush Hour: ', FORMAT_TIME(hour))
 
 
 @calculate_time
-def station_stats(df: pd.DataFrame, buffer: list):
+def station_stats(df: pd.DataFrame):
     """Display statistics on the most popular stations and trip."""
 
     from collections import Counter
@@ -145,91 +146,63 @@ def station_stats(df: pd.DataFrame, buffer: list):
     # most frequent route
     route = Counter(zip(df['Start Station'], df['End Station'])).most_common(1)
 
-    buffer.append('Station Statictics')
-    buffer.append('------------------')
-    buffer.append(f'Most popular start station: {start.index[0]}, Count: {start.iloc[0]}')
-    buffer.append(f'Most popular end station: {end.index[0]}, Count: {end.iloc[0]}')
-    buffer.append(f'Most frequent route: {route[0][0][0]} -> {route[0][0][1]}, Count: {route[0][1]}')
+    print(f'Most popular start station: {start.index[0]}, Count: {start.iloc[0]}')
+    print(f'Most popular end station: {end.index[0]}, Count: {end.iloc[0]}')
+    print(f'Most frequent route: {route[0][0][0]} -> {route[0][0][1]}, Count: {route[0][1]}')
 
 
 @calculate_time
-def trip_duration_stats(df: pd.DataFrame, buffer: list):
+def trip_duration_stats(df: pd.DataFrame):
     """Display statistics on the total and average trip duration."""
-    from datetime import timedelta
     
-    total, average, max_ = df['Trip Duration'].agg(['sum', 'mean', 'max'])
+    total, average = df['Trip Duration'].agg(['sum', 'mean'])
 
     # display total travel time
-    dt_total = timedelta(seconds=total)
+    hrs, rem = divmod(total, 3600)
+    mins, secs = divmod(rem, 60)
+    print('Total travel time: ', f'{hrs:02.0f}h {mins:02.0f}m {secs:02.0f}s')
 
     # display average trip duration
-    dt_avg = timedelta(seconds=average)
-
-    # display longest trip
-    dt_max = timedelta(seconds=max_)
-
-    buffer.append('Trip Duration Statistics')
-    buffer.append('------------------------')
-    buffer.append(f'Total trip time: {dt_total}')
-    buffer.append(f'Average trip duration: {dt_avg}')
-    buffer.append(f'Longest trip: {dt_max}')
+    a_mins, a_secs = divmod(average, 60)
+    print('Average trip duration: ', f'{a_mins:02.0f}m {a_secs:02.0f}s')
 
 
 @calculate_time
-def user_stats(df: pd.DataFrame, buffer: list):
+def user_stats(df: pd.DataFrame):
     """Display statistics on bikeshare users."""
-
-    buffer.append('Users Breakdown')
-    buffer.append('---------------')
 
     if 'User Type' in df:
        user_types_count = df['User Type'].value_counts()
-       buffer.append('Type:')
+       print('User Types:')
        for typ, count in user_types_count.items():
-           buffer.append(f'\t{typ}: {count}')
+           print(f'\t{typ}: {count}')
 
     if 'Gender' in df:
         gender_count = df['Gender'].value_counts()
-        buffer.append('Gender:')
+        print('Gender Count:')
         for gender, count in gender_count.items():
-            buffer.append(f'\t{gender}: {count}')
+            print(f'\t{gender}: {count}')
 
     if 'Birth Year' in df:
         by = df['Birth Year']
         by_max, by_min = by.agg(['max', 'min'])
         by_common = by.mode()[0]
-        buffer.append('Birth Year:')
-        buffer.append(f'\tOldest: {by_min:.0f}')
-        buffer.append(f'\tYoungest: {by_max:.0f}')
-        buffer.append(f'\tMost Common: {by_common:.0f}')
+        print(f'Birth Year:\n\tOldest: {by_min:.0f}\n\tYoungest: {by_max:.0f}\n\tMost Common: {by_common:.0f}', )
 
 
 if __name__ == '__main__':
 
     while True:
-        data = []
         city, months, days = get_filters()
 
         df = load_data(city, months, days)
 
         print(f'\nCalulating Statistics ... filters({city = }, {months = }, {days = })\n')
 
-        time_stats(df, data)
-        station_stats(df, data)
-        trip_duration_stats(df, data)
-        user_stats(df, data)
-
-        current_line = 0
-        while current_line < len(data):
-            for i in range(current_line, min(current_line + 5, len(data))):
-                print(data[i])
-
-            inp = input("\nPress 'Enter' to view next 5 lines > ")
-            if inp:
-                break
-
-            print(' ')
-            current_line += 5
+        time_stats(df)
+        station_stats(df)
+        trip_duration_stats(df)
+        user_stats(df)
 
         restart = input('restart program [y/n]? ').strip().lower()
 

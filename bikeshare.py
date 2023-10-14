@@ -154,17 +154,21 @@ def station_stats(df: pd.DataFrame):
 @calculate_time
 def trip_duration_stats(df: pd.DataFrame):
     """Display statistics on the total and average trip duration."""
+    from datetime import timedelta
     
-    total, average = df['Trip Duration'].agg(['sum', 'mean'])
+    total, average, td_max, td_min = df['Trip Duration'].agg(['sum', 'mean', 'max', 'min'])
 
     # display total travel time
-    hrs, rem = divmod(total, 3600)
-    mins, secs = divmod(rem, 60)
-    print('Total travel time: ', f'{hrs:02.0f}h {mins:02.0f}m {secs:02.0f}s')
+    print('Total travel time: ',  timedelta(seconds=total))
 
     # display average trip duration
-    a_mins, a_secs = divmod(average, 60)
-    print('Average trip duration: ', f'{a_mins:02.0f}m {a_secs:02.0f}s')
+    print('Average trip duration: ', timedelta(seconds=average))
+
+    #display longest trip
+    print('Longest trip: ', timedelta(seconds=td_max))
+
+    #display shortest trip
+    print('Shortest trip: ', timedelta(seconds=td_min))
 
 
 @calculate_time

@@ -1,3 +1,8 @@
+"""
+Author: Aniekan Umanah
+Description: US Bikeshare Data Analysis
+"""
+
 import logging
 import pandas as pd
 from pick import pick
@@ -57,16 +62,15 @@ def get_filters():
     )
 
     months, days = None, None
-    filt = input('Would you like to apply a filter? [month, day, both] enter to continue > ').strip().lower()
-    match filt:
-        case 'month':
-            months = get_months()
-        case 'day':
-            days = get_days()
-        case 'both':
-            months = get_months()
-            days = get_days()
-        case _: None
+    filt = input(
+        'Would you like to apply a filter? [month, day, both] enter to continue > ').strip().lower()
+    if filt == 'month':
+        months = get_months()
+    elif filt == 'day':
+        days = get_days()
+    elif filt == 'both':
+        months = get_months()
+        days = get_days()
 
     return city, months, days
 
@@ -100,7 +104,6 @@ def load_data(city: str, months: list | None, days: list | None):
 
     if months:
         df = df[df.Month.isin(months)]
-    
     if days:
         df = df[df.Day.isin(days)]
 
@@ -190,10 +193,10 @@ def user_stats(df: pd.DataFrame):
     """Display statistics on bikeshare users."""
 
     if 'User Type' in df:
-       user_types_count = df['User Type'].value_counts()
-       print('User Types:')
-       for typ, count in user_types_count.items():
-           print(f'\t{typ}: {count}')
+        user_types_count = df['User Type'].value_counts()
+        print('User Types:')
+        for typ, count in user_types_count.items():
+            print(f'\t{typ}: {count}')
 
     if 'Gender' in df:
         gender_count = df['Gender'].value_counts()
@@ -205,7 +208,7 @@ def user_stats(df: pd.DataFrame):
         by = df['Birth Year']
         by_max, by_min = by.agg(['max', 'min'])
         by_common = by.mode()[0]
-        print(f'Birth Year:\n\tOldest: {by_min:.0f}\n\tYoungest: {by_max:.0f}\n\tMost Common: {by_common:.0f}', )
+        print(f'Birth Year:\n\tOldest: {by_min:.0f}\n\tYoungest: {by_max:.0f}\n\tMost Common: {by_common:.0f}')
 
 
 if __name__ == '__main__':
@@ -230,7 +233,8 @@ if __name__ == '__main__':
                 chunk = df.iloc[i:i + rows_per_page, 0:-3]
                 print('\n',chunk)
 
-                user_input = input("\nWould you like to view the next 5 rows [y/n]? ").strip().lower()
+                user_input = input(
+                    "\nWould you like to view the next 5 rows [y/n]? ").strip().lower()
                 if user_input != 'y':
                     break
 
